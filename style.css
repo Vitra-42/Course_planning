@@ -69,8 +69,11 @@ body {
 
 h1 {
     margin: 0;
+
     font-size: clamp(24px, 3vw, 42px);
+
     letter-spacing: 2px;
+
     color: #392e2e;
 
     text-shadow:
@@ -79,7 +82,9 @@ h1 {
 
 .title-block p {
     margin: 7px 0 0;
+
     font-size: 14px;
+
     color: #766767;
 }
 
@@ -90,6 +95,7 @@ h1 {
 
 .progress {
     min-width: 150px;
+
     padding: 12px 18px;
 
     border-radius: 14px;
@@ -104,6 +110,7 @@ h1 {
     text-align: center;
 
     font-size: 22px;
+
     font-weight: bold;
 }
 
@@ -114,10 +121,15 @@ h1 {
 
 .progress small {
     display: block;
+
     margin-top: 3px;
+
     font-size: 10px;
+
     font-weight: normal;
+
     color: #887777;
+
     letter-spacing: 1px;
 }
 
@@ -169,8 +181,11 @@ h1 {
     border: 12px solid #694635;
 
     box-shadow:
+
         inset 0 0 0 4px rgba(255,255,255,0.12),
+
         inset 0 0 40px rgba(60,30,15,0.25),
+
         0 15px 40px rgba(60,40,30,0.25);
 }
 
@@ -183,6 +198,7 @@ h1 {
     content: "";
 
     position: absolute;
+
     inset: 12px;
 
     border:
@@ -190,6 +206,8 @@ h1 {
         rgba(255,255,255,0.15);
 
     pointer-events: none;
+
+    z-index: 1;
 }
 
 .board::after {
@@ -201,11 +219,14 @@ h1 {
     bottom: 18px;
 
     font-size: 10px;
+
     letter-spacing: 3px;
 
     color: rgba(255,255,255,0.35);
 
     pointer-events: none;
+
+    z-index: 1;
 }
 
 
@@ -224,9 +245,11 @@ h1 {
     z-index: 2;
 
     /*
-       Именно здесь происходит увеличение.
-       Никакого 3D-переворота.
+       ВАЖНО:
+       Никакого rotateY.
+       Никакого 3D.
     */
+
     transition:
         transform 0.5s cubic-bezier(.2,.8,.2,1);
 }
@@ -238,6 +261,10 @@ h1 {
 
 .sticker.flipped {
     z-index: 100;
+
+    /*
+       Увеличиваем сам стикер.
+    */
 
     transform:
         scale(1.8);
@@ -253,6 +280,13 @@ h1 {
 
     width: 100%;
     height: 100%;
+
+    /*
+       Очень важно:
+       содержимое не скрывается.
+    */
+
+    overflow: visible;
 }
 
 
@@ -264,7 +298,8 @@ h1 {
 .sticker-back {
     position: absolute;
 
-    inset: 0;
+    top: 0;
+    left: 0;
 
     width: 100%;
     height: 100%;
@@ -310,24 +345,39 @@ h1 {
         4px solid
         rgba(255,255,255,0.5);
 
+    /*
+       Плавно исчезает при открытии.
+    */
+
+    opacity: 1;
+
+    visibility: visible;
+
     transition:
-        opacity 0.25s ease;
+        opacity 0.25s ease,
+        visibility 0s linear 0s;
 }
 
 
 /* =========================================================
-   ПЕРЕДНЯЯ СТОРОНА ИСЧЕЗАЕТ
+   ПЕРЕДНЯЯ СТОРОНА ПРИ ОТКРЫТИИ
 ========================================================= */
 
 .sticker.flipped .sticker-front {
     opacity: 0;
 
+    visibility: hidden;
+
     pointer-events: none;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0s linear 0.25s;
 }
 
 
 /* =========================================================
-   ЦВЕТА
+   ЦВЕТА СТИКЕРОВ
 ========================================================= */
 
 .sticker:nth-child(4n) .sticker-front {
@@ -373,14 +423,14 @@ h1 {
 
 /* =========================================================
    ОБОРОТНАЯ СТОРОНА
-
-   ВАЖНО:
-   НЕТ rotateY.
-   НЕТ backface-visibility.
-   НЕТ 3D.
 ========================================================= */
 
 .sticker-back {
+    /*
+       Задняя сторона всегда существует.
+       Она просто скрыта до клика.
+    */
+
     z-index: 1;
 
     padding: 14px;
@@ -403,23 +453,38 @@ h1 {
 
     opacity: 0;
 
+    visibility: hidden;
+
     pointer-events: none;
 
+    /*
+       Никаких transform.
+       Никакого rotateY.
+       Никакого backface-visibility.
+    */
+
     transition:
-        opacity 0.25s ease;
+        opacity 0.25s ease,
+        visibility 0s linear 0.25s;
 }
 
 
 /* =========================================================
-   ОБОРОТ ПОКАЗЫВАЕТСЯ
+   ОБОРОТНАЯ СТОРОНА ПРИ ОТКРЫТИИ
 ========================================================= */
 
 .sticker.flipped .sticker-back {
+    z-index: 3;
+
     opacity: 1;
+
+    visibility: visible;
 
     pointer-events: auto;
 
-    z-index: 3;
+    transition:
+        opacity 0.25s ease,
+        visibility 0s linear 0s;
 }
 
 
@@ -428,14 +493,20 @@ h1 {
 ========================================================= */
 
 .back-title {
+    width: 100%;
+
     margin: 0 0 8px 0;
 
-    width: 100%;
+    padding: 0;
 
     font-family:
         "Trebuchet MS",
         Arial,
         sans-serif;
+
+    /*
+       ВСЕГДА 15px
+    */
 
     font-size: 15px !important;
 
@@ -450,6 +521,14 @@ h1 {
     color: #a15f68;
 
     text-align: center;
+
+    /*
+       Защита от исчезновения текста.
+    */
+
+    opacity: 1;
+
+    visibility: visible;
 }
 
 
@@ -467,6 +546,14 @@ h1 {
     align-items: center;
 
     gap: 6px;
+
+    /*
+       Текст не должен исчезать.
+    */
+
+    opacity: 1;
+
+    visibility: visible;
 }
 
 
@@ -486,6 +573,10 @@ h1 {
         Arial,
         sans-serif;
 
+    /*
+       15px
+    */
+
     font-size: 15px !important;
 
     line-height: 1.3;
@@ -495,6 +586,12 @@ h1 {
     text-align: center;
 
     max-width: 95%;
+
+    color: #403737;
+
+    opacity: 1;
+
+    visibility: visible;
 }
 
 
@@ -512,11 +609,15 @@ h1 {
     flex-wrap: wrap;
 
     gap: 5px;
+
+    opacity: 1;
+
+    visibility: visible;
 }
 
 
 /* =========================================================
-   УЗЛЫ
+   УЗЕЛ
 ========================================================= */
 
 .mind-node {
@@ -531,6 +632,10 @@ h1 {
         Arial,
         sans-serif;
 
+    /*
+       15px
+    */
+
     font-size: 15px !important;
 
     line-height: 1.3;
@@ -540,6 +645,12 @@ h1 {
     border:
         1px solid
         rgba(80,80,100,0.12);
+
+    color: #403737;
+
+    opacity: 1;
+
+    visibility: visible;
 }
 
 
@@ -559,6 +670,10 @@ h1 {
         Arial,
         sans-serif;
 
+    /*
+       15px
+    */
+
     font-size: 15px !important;
 
     line-height: 1.4;
@@ -566,11 +681,15 @@ h1 {
     color: #655d5d;
 
     text-align: left;
+
+    opacity: 1;
+
+    visibility: visible;
 }
 
 
 /* =========================================================
-   HOVER ЗАКРЫТОЙ КАРТОЧКИ
+   HOVER ЗАКРЫТОГО СТИКЕРА
 ========================================================= */
 
 .sticker:not(.flipped):hover {
@@ -581,9 +700,7 @@ h1 {
 
 
 /* =========================================================
-   HOVER ОТКРЫТОЙ КАРТОЧКИ
-
-   Сохраняем увеличение.
+   HOVER ОТКРЫТОГО СТИКЕРА
 ========================================================= */
 
 .sticker.flipped:hover {
@@ -593,7 +710,7 @@ h1 {
 
 
 /* =========================================================
-   ТЕНЬ ОТКРЫТОЙ КАРТОЧКИ
+   ТЕНЬ ОТКРЫТОГО СТИКЕРА
 ========================================================= */
 
 .sticker.flipped .sticker-inner {
@@ -681,6 +798,7 @@ h1 {
 
 .hint-icon {
     color: #d17c8a;
+
     font-size: 16px;
 }
 
@@ -722,14 +840,27 @@ h1 {
         font-size: 13px;
     }
 
-    .back-title,
-    .mind-root,
-    .mind-node,
+    .back-title {
+        font-size: 15px !important;
+    }
+
+    .mind-root {
+        font-size: 15px !important;
+    }
+
+    .mind-node {
+        font-size: 15px !important;
+    }
+
     .mind-actions {
         font-size: 15px !important;
     }
 }
 
+
+/* =========================================================
+   МАЛЕНЬКИЙ ЭКРАН
+========================================================= */
 
 @media (max-width: 600px) {
 
@@ -768,9 +899,18 @@ h1 {
         text-align: center;
     }
 
-    .back-title,
-    .mind-root,
-    .mind-node,
+    .back-title {
+        font-size: 15px !important;
+    }
+
+    .mind-root {
+        font-size: 15px !important;
+    }
+
+    .mind-node {
+        font-size: 15px !important;
+    }
+
     .mind-actions {
         font-size: 15px !important;
     }
