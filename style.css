@@ -229,7 +229,6 @@ h1 {
     inset: 12px;
 
     border:
-
         1px solid
         rgba(255,255,255,0.15);
 
@@ -277,6 +276,14 @@ h1 {
 }
 
 
+/* Открытый стикер всегда поверх остальных */
+
+.sticker.flipped {
+
+    z-index: 100;
+}
+
+
 .sticker:hover {
 
     z-index: 50;
@@ -297,9 +304,21 @@ h1 {
 }
 
 
+/* =========================================================
+   ПЕРЕВОРОТ + УВЕЛИЧЕНИЕ
+========================================================= */
+
 .sticker.flipped .sticker-inner {
 
-    transform: rotateY(180deg);
+    transform:
+        rotateY(180deg)
+        scale(1.45);
+
+    filter:
+        drop-shadow(
+            0 18px 25px
+            rgba(40,20,10,0.35)
+        );
 }
 
 
@@ -587,12 +606,24 @@ h1 {
 }
 
 
+/*
+   Когда стикер уже перевёрнут,
+   при наведении он становится ещё
+   чуть крупнее.
+*/
+
 .sticker.flipped:hover .sticker-inner {
 
     transform:
         rotateY(180deg)
-        translateY(-7px)
-        scale(1.03);
+        translateY(-10px)
+        scale(1.5);
+
+    filter:
+        drop-shadow(
+            0 20px 30px
+            rgba(40,20,10,0.4)
+        );
 }
 
 
