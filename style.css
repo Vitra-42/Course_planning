@@ -36,9 +36,7 @@ body {
 
 .scene {
     min-height: 100vh;
-
     padding: 25px;
-
     position: relative;
 }
 
@@ -48,15 +46,11 @@ body {
 ========================================================= */
 
 .header {
-
     max-width: 1500px;
-
     margin: 0 auto 20px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 
     gap: 30px;
@@ -69,9 +63,7 @@ body {
 
 
 .title-jp {
-
     font-size: 15px;
-
     color: #9b6666;
 
     letter-spacing: 4px;
@@ -83,7 +75,6 @@ body {
 
 
 h1 {
-
     margin: 0;
 
     font-size: clamp(24px, 3vw, 42px);
@@ -98,7 +89,6 @@ h1 {
 
 
 .title-block p {
-
     margin: 7px 0 0;
 
     font-size: 14px;
@@ -112,7 +102,6 @@ h1 {
 ========================================================= */
 
 .progress {
-
     min-width: 150px;
 
     padding: 12px 18px;
@@ -135,7 +124,6 @@ h1 {
 
 
 .counter-separator {
-
     margin: 0 5px;
 
     color: #c39494;
@@ -143,7 +131,6 @@ h1 {
 
 
 .progress small {
-
     display: block;
 
     margin-top: 3px;
@@ -163,11 +150,9 @@ h1 {
 ========================================================= */
 
 .board {
-
     position: relative;
 
     width: 100%;
-
     max-width: 1500px;
 
     height: 760px;
@@ -221,7 +206,6 @@ h1 {
 ========================================================= */
 
 .board::before {
-
     content: "";
 
     position: absolute;
@@ -237,13 +221,11 @@ h1 {
 
 
 .board::after {
-
     content: "TOTAL DOWNLOAD";
 
     position: absolute;
 
     right: 25px;
-
     bottom: 18px;
 
     font-size: 10px;
@@ -261,11 +243,9 @@ h1 {
 ========================================================= */
 
 .sticker {
-
     position: absolute;
 
     width: 170px;
-
     height: 135px;
 
     cursor: pointer;
@@ -276,22 +256,19 @@ h1 {
 }
 
 
-/* Открытый стикер всегда поверх остальных */
+/* Открытый стикер поверх остальных */
 
 .sticker.flipped {
-
     z-index: 100;
 }
 
 
 .sticker:hover {
-
     z-index: 50;
 }
 
 
 .sticker-inner {
-
     width: 100%;
     height: 100%;
 
@@ -305,18 +282,18 @@ h1 {
 
 
 /* =========================================================
-   ПЕРЕВОРОТ + УВЕЛИЧЕНИЕ
+   ПЕРЕВЁРНУТЫЙ СТИКЕР
 ========================================================= */
 
 .sticker.flipped .sticker-inner {
 
     transform:
         rotateY(180deg)
-        scale(1.45);
+        scale(1.25);
 
     filter:
         drop-shadow(
-            0 18px 25px
+            0 15px 22px
             rgba(40,20,10,0.35)
         );
 }
@@ -328,7 +305,6 @@ h1 {
 
 .sticker-front,
 .sticker-back {
-
     position: absolute;
 
     inset: 0;
@@ -348,17 +324,15 @@ h1 {
 
 
 /* =========================================================
-   ПЕРЕД
+   ПЕРЕДНЯЯ СТОРОНА
 ========================================================= */
 
 .sticker-front {
-
     padding: 18px 15px;
 
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     text-align: center;
@@ -376,11 +350,15 @@ h1 {
 
     background: #fff09c;
 
-    border-top: 4px solid rgba(255,255,255,0.5);
+    border-top:
+        4px solid
+        rgba(255,255,255,0.5);
 }
 
 
-/* разные цвета */
+/* =========================================================
+   ЦВЕТА СТИКЕРОВ
+========================================================= */
 
 .sticker:nth-child(4n) .sticker-front {
     background: #ffd6dc;
@@ -404,7 +382,6 @@ h1 {
 ========================================================= */
 
 .sticker-front::after {
-
     content: "";
 
     position: absolute;
@@ -425,18 +402,19 @@ h1 {
 
 
 /* =========================================================
-   BACK
+   ОБОРОТНАЯ СТОРОНА
 ========================================================= */
 
 .sticker-back {
-
     transform: rotateY(180deg);
 
-    padding: 10px;
+    padding: 12px;
 
     background: #fffdf3;
 
-    border: 2px solid rgba(80,70,60,0.15);
+    border:
+        2px solid
+        rgba(80,70,60,0.15);
 
     display: flex;
 
@@ -448,9 +426,12 @@ h1 {
 }
 
 
-.back-title {
+/* =========================================================
+   ЗАГОЛОВОК ОБОРОТА
+========================================================= */
 
-    font-size: 11px;
+.back-title {
+    font-size: 12px;
 
     font-weight: bold;
 
@@ -460,14 +441,17 @@ h1 {
 
     color: #a15f68;
 
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 
     text-align: center;
 }
 
 
-.mindmap {
+/* =========================================================
+   МИНИ-ИНТЕЛЛЕКТ-КАРТА
+========================================================= */
 
+.mindmap {
     width: 100%;
 
     display: flex;
@@ -476,28 +460,36 @@ h1 {
 
     align-items: center;
 
-    gap: 3px;
+    gap: 5px;
 }
 
 
-.mind-root {
+/* Центральный узел */
 
-    padding: 4px 7px;
+.mind-root {
+    padding: 5px 9px;
 
     border-radius: 8px;
 
     background: #f3c3c8;
 
-    font-size: 9px;
+    font-size: 12px;
 
     font-weight: bold;
 
     text-align: center;
+
+    line-height: 1.15;
+
+    box-shadow:
+        0 2px 4px
+        rgba(80,50,50,0.12);
 }
 
 
-.mind-branches {
+/* Ветки */
 
+.mind-branches {
     width: 100%;
 
     display: flex;
@@ -506,52 +498,62 @@ h1 {
 
     flex-wrap: wrap;
 
-    gap: 4px;
+    gap: 5px;
 }
 
 
-.mind-node {
+/* Узлы */
 
-    padding: 3px 5px;
+.mind-node {
+    padding: 4px 6px;
 
     background: #e8edf8;
 
     border-radius: 5px;
 
-    font-size: 7px;
+    font-size: 10px;
 
     line-height: 1.15;
 
     text-align: center;
 
-    border: 1px solid rgba(80,80,100,0.12);
+    border:
+        1px solid
+        rgba(80,80,100,0.12);
+
+    box-shadow:
+        0 1px 2px
+        rgba(50,50,70,0.08);
 }
 
 
+/* =========================================================
+   КОНКРЕТНЫЕ ДЕЙСТВИЯ
+========================================================= */
+
 .mind-actions {
+    margin-top: 6px;
 
-    margin-top: 4px;
+    padding: 0 3px;
 
-    font-size: 7px;
+    font-size: 10px;
 
     color: #655d5d;
 
     text-align: center;
 
-    line-height: 1.25;
+    line-height: 1.3;
 }
 
 
 /* =========================================================
-   HINT
+   ПОДСКАЗКА
 ========================================================= */
 
 .hint {
-
     position: fixed;
 
     left: 50%;
-
     bottom: 20px;
 
     transform: translateX(-50%);
@@ -564,7 +566,8 @@ h1 {
 
     padding: 9px 15px;
 
-    background: rgba(255,255,255,0.85);
+    background:
+        rgba(255,255,255,0.85);
 
     border-radius: 30px;
 
@@ -573,14 +576,14 @@ h1 {
     color: #665959;
 
     box-shadow:
-        0 5px 20px rgba(50,30,20,0.12);
+        0 5px 20px
+        rgba(50,30,20,0.12);
 
     z-index: 100;
 }
 
 
 .hint-icon {
-
     color: #d17c8a;
 
     font-size: 16px;
@@ -588,11 +591,10 @@ h1 {
 
 
 /* =========================================================
-   АНИМАЦИЯ НАВЕДЕНИЯ
+   НАВЕДЕНИЕ НА ОБЫЧНЫЙ СТИКЕР
 ========================================================= */
 
 .sticker:not(.flipped):hover .sticker-inner {
-
     transform:
         translateY(-9px)
         rotateZ(0deg)
@@ -606,29 +608,26 @@ h1 {
 }
 
 
-/*
-   Когда стикер уже перевёрнут,
-   при наведении он становится ещё
-   чуть крупнее.
-*/
+/* =========================================================
+   НАВЕДЕНИЕ НА ПЕРЕВЁРНУТЫЙ СТИКЕР
+========================================================= */
 
 .sticker.flipped:hover .sticker-inner {
-
     transform:
         rotateY(180deg)
-        translateY(-10px)
-        scale(1.5);
+        translateY(-7px)
+        scale(1.28);
 
     filter:
         drop-shadow(
-            0 20px 30px
+            0 18px 25px
             rgba(40,20,10,0.4)
         );
 }
 
 
 /* =========================================================
-   АНИМАЦИЯ КЛИКА
+   ЭФФЕКТ ✦
 ========================================================= */
 
 @keyframes sparkle {
@@ -651,7 +650,6 @@ h1 {
 
 
 .sparkle {
-
     position: absolute;
 
     pointer-events: none;
@@ -694,6 +692,21 @@ h1 {
         font-size: 13px;
     }
 
+    .back-title {
+        font-size: 11px;
+    }
+
+    .mind-root {
+        font-size: 10px;
+    }
+
+    .mind-node {
+        font-size: 9px;
+    }
+
+    .mind-actions {
+        font-size: 9px;
+    }
 }
 
 
