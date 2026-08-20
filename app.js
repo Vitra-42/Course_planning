@@ -5,6 +5,365 @@ let flippedCount = 0;
 
 
 /* =========================================================
+   ПРИНУДИТЕЛЬНЫЕ СТИЛИ ДЛЯ ОБОРОТНОЙ СТОРОНЫ
+   ---------------------------------------------------------
+   Этот блок специально добавлен в JS, чтобы старый CSS
+   не мог скрыть текст обратной стороны.
+========================================================= */
+
+const forcedStickerStyles = document.createElement("style");
+
+forcedStickerStyles.textContent = `
+
+    .sticker {
+        position: absolute !important;
+        width: 170px !important;
+        height: 135px !important;
+        perspective: 1200px !important;
+        cursor: pointer !important;
+        z-index: 2;
+    }
+
+    .sticker-inner {
+        position: relative !important;
+        width: 100% !important;
+        height: 100% !important;
+        transform-style: preserve-3d !important;
+        transform-origin: center center !important;
+
+        transition:
+            transform 0.7s cubic-bezier(.2,.8,.2,1) !important;
+    }
+
+    .sticker-front,
+    .sticker-back {
+        position: absolute !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* ПЕРЕДНЯЯ СТОРОНА */
+
+    .sticker-front {
+        z-index: 2 !important;
+    }
+
+
+    /* ОБРАТНАЯ СТОРОНА */
+
+    .sticker-back {
+        z-index: 1 !important;
+
+        transform:
+            rotateY(180deg)
+            translateZ(1px) !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        align-items: center !important;
+
+        justify-content: flex-start !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        color: #332b2b !important;
+
+        background: #fffdf3 !important;
+
+        padding: 14px !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* ПРИНУДИТЕЛЬНО ПОКАЗЫВАЕМ КОНТЕНТ */
+
+    .sticker-back-content {
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        color: #332b2b !important;
+
+        font-family:
+            "Trebuchet MS",
+            Arial,
+            sans-serif !important;
+    }
+
+
+    .back-title {
+        display: block !important;
+
+        width: 100% !important;
+
+        margin: 0 0 8px 0 !important;
+
+        font-family:
+            "Trebuchet MS",
+            Arial,
+            sans-serif !important;
+
+        font-size: 15px !important;
+
+        line-height: 1.25 !important;
+
+        font-weight: bold !important;
+
+        color: #a15f68 !important;
+
+        text-align: center !important;
+
+        text-transform: uppercase !important;
+
+        letter-spacing: 0.5px !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+    }
+
+
+    .mindmap {
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        align-items: center !important;
+
+        gap: 6px !important;
+
+        width: 100% !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+    }
+
+
+    .mind-root {
+        display: block !important;
+
+        width: auto !important;
+
+        max-width: 95% !important;
+
+        padding: 6px 9px !important;
+
+        border-radius: 8px !important;
+
+        background: #f3c3c8 !important;
+
+        font-family:
+            "Trebuchet MS",
+            Arial,
+            sans-serif !important;
+
+        font-size: 15px !important;
+
+        line-height: 1.3 !important;
+
+        font-weight: bold !important;
+
+        color: #332b2b !important;
+
+        text-align: center !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+    }
+
+
+    .mind-branches {
+        display: flex !important;
+
+        flex-wrap: wrap !important;
+
+        justify-content: center !important;
+
+        align-items: center !important;
+
+        gap: 5px !important;
+
+        width: 100% !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+    }
+
+
+    .mind-node {
+        display: block !important;
+
+        padding: 5px 7px !important;
+
+        background: #e8edf8 !important;
+
+        border-radius: 5px !important;
+
+        font-family:
+            "Trebuchet MS",
+            Arial,
+            sans-serif !important;
+
+        font-size: 15px !important;
+
+        line-height: 1.3 !important;
+
+        color: #332b2b !important;
+
+        text-align: center !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+    }
+
+
+    .mind-actions {
+        display: block !important;
+
+        width: 100% !important;
+
+        margin-top: 5px !important;
+
+        padding: 0 4px !important;
+
+        font-family:
+            "Trebuchet MS",
+            Arial,
+            sans-serif !important;
+
+        font-size: 15px !important;
+
+        line-height: 1.4 !important;
+
+        color: #655d5d !important;
+
+        text-align: left !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+    }
+
+
+    /* =====================================================
+       ПЕРЕВОРОТ
+    ===================================================== */
+
+    .sticker.flipped .sticker-inner {
+        transform:
+            rotateY(180deg)
+            scale(1.8) !important;
+
+        filter:
+            drop-shadow(
+                0 20px 30px
+                rgba(40,20,10,0.4)
+            ) !important;
+    }
+
+
+    .sticker.flipped:hover .sticker-inner {
+        transform:
+            rotateY(180deg)
+            scale(1.8) !important;
+    }
+
+
+    /* =====================================================
+       ОБЫЧНЫЙ HOVER
+    ===================================================== */
+
+    .sticker:not(.flipped):hover .sticker-inner {
+        transform:
+            translateY(-9px)
+            scale(1.04) !important;
+
+        filter:
+            drop-shadow(
+                0 12px 12px
+                rgba(40,20,10,0.25)
+            ) !important;
+    }
+
+
+    /* =====================================================
+       МОБИЛЬНАЯ ВЕРСИЯ
+    ===================================================== */
+
+    @media (max-width: 900px) {
+
+        .sticker {
+            width: 145px !important;
+            height: 115px !important;
+        }
+
+        .sticker.flipped .sticker-inner {
+            transform:
+                rotateY(180deg)
+                scale(1.75) !important;
+        }
+
+        .sticker.flipped:hover .sticker-inner {
+            transform:
+                rotateY(180deg)
+                scale(1.75) !important;
+        }
+    }
+
+
+    @media (max-width: 600px) {
+
+        .sticker {
+            width: 135px !important;
+            height: 105px !important;
+        }
+
+        .sticker.flipped .sticker-inner {
+            transform:
+                rotateY(180deg)
+                scale(1.7) !important;
+        }
+
+        .sticker.flipped:hover .sticker-inner {
+            transform:
+                rotateY(180deg)
+                scale(1.7) !important;
+        }
+    }
+
+`;
+
+document.head.appendChild(forcedStickerStyles);
+
+
+/* =========================================================
    ДАННЫЕ СТИКЕРОВ
 ========================================================= */
 
@@ -294,7 +653,22 @@ const stickers = [
 
 
 /* =========================================================
-   СОЗДАНИЕ СТИКЕРОВ
+   ЭКРАНИРОВАНИЕ ТЕКСТА
+========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* =========================================================
+   СОЗДАНИЕ СТИКЕРА
 ========================================================= */
 
 function createSticker(data, index) {
@@ -307,26 +681,28 @@ function createSticker(data, index) {
 
 
     /* -----------------------------------------------------
-       СЛУЧАЙНАЯ ПОЗИЦИЯ
+       ПОЗИЦИЯ
     ----------------------------------------------------- */
 
     const boardWidth = board.clientWidth;
     const boardHeight = board.clientHeight;
 
-
     const stickerWidth = 170;
     const stickerHeight = 135;
 
-
     const x =
         Math.random() *
-        Math.max(20, boardWidth - stickerWidth - 20);
-
+        Math.max(
+            20,
+            boardWidth - stickerWidth - 20
+        );
 
     const y =
         Math.random() *
-        Math.max(20, boardHeight - stickerHeight - 20);
-
+        Math.max(
+            20,
+            boardHeight - stickerHeight - 20
+        );
 
     const rotation =
         Math.random() * 14 - 7;
@@ -334,98 +710,148 @@ function createSticker(data, index) {
 
     sticker.style.left = `${x}px`;
     sticker.style.top = `${y}px`;
-    sticker.style.transform = `rotate(${rotation}deg)`;
+    sticker.style.transform =
+        `rotate(${rotation}deg)`;
 
 
-    /* -----------------------------------------------------
-       HTML
-    ----------------------------------------------------- */
+    /* =====================================================
+       HTML СТИКЕРА
+    ===================================================== */
+
+    const nodesHTML = data.nodes
+        .map(node => {
+
+            return `
+                <div class="mind-node">
+                    ${escapeHTML(node)}
+                </div>
+            `;
+
+        })
+        .join("");
+
 
     sticker.innerHTML = `
 
         <div class="sticker-inner">
 
+
+            <!-- =========================================
+                 ПЕРЕДНЯЯ СТОРОНА
+            ========================================== -->
+
             <div class="sticker-front">
 
-                ${data.text}
+                ${escapeHTML(data.text)}
 
             </div>
 
+
+            <!-- =========================================
+                 ОБРАТНАЯ СТОРОНА
+            ========================================== -->
 
             <div class="sticker-back">
 
-                <div class="back-title">
-                    ${data.title}
+
+                <div class="sticker-back-content">
+
+
+                    <div class="back-title">
+                        ${escapeHTML(data.title)}
+                    </div>
+
+
+                    <div class="mindmap">
+
+
+                        <div class="mind-root">
+                            ${escapeHTML(data.title)}
+                        </div>
+
+
+                        <div class="mind-branches">
+
+                            ${nodesHTML}
+
+                        </div>
+
+
+                        <div class="mind-actions">
+                            ${escapeHTML(data.actions)}
+                        </div>
+
+
+                    </div>
+
+
                 </div>
 
-
-                <div class="mindmap">
-
-                    <div class="mind-root">
-                        ${data.title}
-                    </div>
-
-
-                    <div class="mind-branches">
-
-                        ${data.nodes.map(node => `
-                            <div class="mind-node">
-                                ${node}
-                            </div>
-                        `).join("")}
-
-                    </div>
-
-
-                    <div class="mind-actions">
-                        ${data.actions}
-                    </div>
-
-                </div>
 
             </div>
+
 
         </div>
 
     `;
 
 
-    /* -----------------------------------------------------
+    /* =====================================================
+       ПРОВЕРКА — ТЕКСТ ДЕЙСТВИТЕЛЬНО СОЗДАН
+    ===================================================== */
+
+    const back = sticker.querySelector(".sticker-back");
+
+    if (back) {
+
+        back.style.visibility = "visible";
+        back.style.opacity = "1";
+
+    }
+
+
+    /* =====================================================
        КЛИК
-    ----------------------------------------------------- */
+    ===================================================== */
 
-    sticker.addEventListener("click", function(event) {
+    sticker.addEventListener(
+        "click",
+        function(event) {
 
-        event.stopPropagation();
-
-
-        const wasFlipped =
-            sticker.classList.contains("flipped");
+            event.stopPropagation();
 
 
-        sticker.classList.toggle("flipped");
+            const wasFlipped =
+                sticker.classList.contains("flipped");
 
 
-        if (!wasFlipped) {
+            sticker.classList.toggle(
+                "flipped"
+            );
 
-            flippedCount++;
 
-        } else {
+            if (!wasFlipped) {
 
-            flippedCount--;
+                flippedCount++;
+
+            } else {
+
+                flippedCount--;
+
+            }
+
+
+            counter.textContent =
+                flippedCount;
+
+
+            createSparkle(
+                event.clientX,
+                event.clientY
+            );
 
         }
-
-
-        counter.textContent = flippedCount;
-
-
-        createSparkle(
-            event.clientX,
-            event.clientY
-        );
-
-    });
+    );
 
 
     return sticker;
@@ -442,7 +868,9 @@ function createSparkle(x, y) {
         document.createElement("div");
 
 
-    sparkle.className = "sparkle";
+    sparkle.className =
+        "sparkle";
+
 
     sparkle.textContent =
         Math.random() > 0.5
@@ -453,6 +881,7 @@ function createSparkle(x, y) {
     sparkle.style.left =
         `${x}px`;
 
+
     sparkle.style.top =
         `${y}px`;
 
@@ -462,20 +891,75 @@ function createSparkle(x, y) {
     );
 
 
-    setTimeout(() => {
+    setTimeout(
+        () => {
 
-        sparkle.remove();
+            sparkle.remove();
 
-    }, 700);
+        },
+        700
+    );
 
 }
 
 
 /* =========================================================
-   ЗАПУСК
+   ЗАКРЫТИЕ СТИКЕРА ПРИ КЛИКЕ ПО ДОСКЕ
+========================================================= */
+
+board.addEventListener(
+    "click",
+    function() {
+
+        const opened =
+            board.querySelector(
+                ".sticker.flipped"
+            );
+
+
+        if (!opened) {
+            return;
+        }
+
+
+        opened.classList.remove(
+            "flipped"
+        );
+
+
+        if (flippedCount > 0) {
+
+            flippedCount--;
+
+        }
+
+
+        counter.textContent =
+            flippedCount;
+
+    }
+);
+
+
+/* =========================================================
+   СОЗДАНИЕ ВСЕХ СТИКЕРОВ
 ========================================================= */
 
 function renderStickers() {
+
+    /* На случай повторного запуска */
+
+    board
+        .querySelectorAll(".sticker")
+        .forEach(sticker => {
+            sticker.remove();
+        });
+
+
+    flippedCount = 0;
+
+    counter.textContent = "0";
+
 
     stickers.forEach(
         (data, index) => {
@@ -498,7 +982,7 @@ function renderStickers() {
 
 
 /* =========================================================
-   ПЕРВИЧНАЯ ИНИЦИАЛИЗАЦИЯ
+   ПЕРВИЧНЫЙ ЗАПУСК
 ========================================================= */
 
 renderStickers();
