@@ -246,19 +246,10 @@ h1 {
 
 /* =========================================================
    ОТКРЫТЫЙ СТИКЕР
-=========================================================
-
-   ВАЖНО:
-
-   Мы НЕ меняем width/height самого .sticker.
-
-   Поэтому соседние стикеры не двигаются.
-
-   Увеличивается только .sticker-inner.
 ========================================================= */
 
 .sticker.flipped {
-    z-index: 100;
+    z-index: 1000;
 }
 
 
@@ -275,13 +266,10 @@ h1 {
 
     transform-style: preserve-3d;
 
+    -webkit-transform-style: preserve-3d;
+
     transition:
         transform 0.7s cubic-bezier(.2,.8,.2,1);
-
-    /*
-       Точка масштабирования находится в центре.
-       Поэтому карточка увеличивается во все стороны.
-    */
 
     transform-origin: center center;
 }
@@ -424,7 +412,9 @@ h1 {
 
     transform: rotateY(180deg);
 
-    padding: 14px;
+    -webkit-transform: rotateY(180deg);
+
+    padding: 16px;
 
     background: #fffdf3;
 
@@ -450,16 +440,22 @@ h1 {
 
 .back-title {
 
-    margin: 0 0 8px 0;
+    width: 100%;
+
+    margin: 0 0 10px 0;
 
     font-family:
         "Trebuchet MS",
         Arial,
         sans-serif;
 
-    font-size: 12px !important;
+    /*
+       15 PX
+    */
 
-    line-height: 1.25;
+    font-size: 15px;
+
+    line-height: 1.3;
 
     font-weight: bold;
 
@@ -487,7 +483,7 @@ h1 {
 
     align-items: center;
 
-    gap: 6px;
+    gap: 7px;
 }
 
 
@@ -497,7 +493,7 @@ h1 {
 
 .mind-root {
 
-    padding: 6px 9px;
+    padding: 7px 10px;
 
     border-radius: 8px;
 
@@ -508,7 +504,11 @@ h1 {
         Arial,
         sans-serif;
 
-    font-size: 12px !important;
+    /*
+       15 PX
+    */
+
+    font-size: 15px;
 
     line-height: 1.3;
 
@@ -555,7 +555,11 @@ h1 {
         Arial,
         sans-serif;
 
-    font-size: 12px !important;
+    /*
+       15 PX
+    */
+
+    font-size: 15px;
 
     line-height: 1.3;
 
@@ -584,7 +588,11 @@ h1 {
         Arial,
         sans-serif;
 
-    font-size: 12px !important;
+    /*
+       15 PX
+    */
+
+    font-size: 15px;
 
     line-height: 1.4;
 
@@ -730,12 +738,14 @@ h1 {
     }
 
     .sticker.flipped .sticker-inner {
+
         transform:
             rotateY(180deg)
             scale(1.75);
     }
 
     .sticker.flipped:hover .sticker-inner {
+
         transform:
             rotateY(180deg)
             scale(1.75);
@@ -746,6 +756,10 @@ h1 {
     }
 }
 
+
+/* =========================================================
+   ТЕЛЕФОН
+========================================================= */
 
 @media (max-width: 600px) {
 
@@ -767,18 +781,21 @@ h1 {
     }
 
     .sticker.flipped .sticker-inner {
+
         transform:
             rotateY(180deg)
             scale(1.7);
     }
 
     .sticker.flipped:hover .sticker-inner {
+
         transform:
             rotateY(180deg)
             scale(1.7);
     }
 
     .hint {
+
         width: calc(100% - 30px);
 
         justify-content: center;
