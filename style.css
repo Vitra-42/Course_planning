@@ -25,6 +25,7 @@ body {
         );
 
     color: #332b2b;
+
     overflow-x: hidden;
 }
 
@@ -46,9 +47,11 @@ body {
 
 .header {
     max-width: 1500px;
+
     margin: 0 auto 20px;
 
     display: flex;
+
     align-items: center;
     justify-content: space-between;
 
@@ -61,9 +64,13 @@ body {
 
 .title-jp {
     font-size: 15px;
+
     color: #9b6666;
+
     letter-spacing: 4px;
+
     margin-bottom: 4px;
+
     opacity: 0.75;
 }
 
@@ -116,6 +123,7 @@ h1 {
 
 .counter-separator {
     margin: 0 5px;
+
     color: #c39494;
 }
 
@@ -142,6 +150,7 @@ h1 {
     position: relative;
 
     width: 100%;
+
     max-width: 1500px;
 
     height: 760px;
@@ -181,17 +190,14 @@ h1 {
     border: 12px solid #694635;
 
     box-shadow:
-
         inset 0 0 0 4px rgba(255,255,255,0.12),
-
         inset 0 0 40px rgba(60,30,15,0.25),
-
         0 15px 40px rgba(60,40,30,0.25);
 }
 
 
 /* =========================================================
-   ДЕКОР
+   ДЕКОР ДОСКИ
 ========================================================= */
 
 .board::before {
@@ -216,6 +222,7 @@ h1 {
     position: absolute;
 
     right: 25px;
+
     bottom: 18px;
 
     font-size: 10px;
@@ -238,37 +245,24 @@ h1 {
     position: absolute;
 
     width: 170px;
+
     height: 135px;
 
     cursor: pointer;
 
-    z-index: 2;
-
-    /*
-       ВАЖНО:
-       Никакого rotateY.
-       Никакого 3D.
-    */
-
-    transition:
-        transform 0.5s cubic-bezier(.2,.8,.2,1);
+    z-index: 10;
 }
 
 
-/* =========================================================
-   ОТКРЫТЫЙ СТИКЕР
-========================================================= */
+/*
+   НЕ ТРОГАЕМ transform У .sticker!
 
-.sticker.flipped {
-    z-index: 100;
+   JavaScript сам задаёт:
 
-    /*
-       Увеличиваем сам стикер.
-    */
+   transform: rotate(...)
 
-    transform:
-        scale(1.8);
-}
+   Поэтому увеличение делаем через .sticker-inner.
+*/
 
 
 /* =========================================================
@@ -279,14 +273,54 @@ h1 {
     position: relative;
 
     width: 100%;
+
     height: 100%;
 
-    /*
-       Очень важно:
-       содержимое не скрывается.
-    */
+    transform: scale(1);
 
-    overflow: visible;
+    transition:
+        transform 0.5s cubic-bezier(.2,.8,.2,1);
+
+    transform-origin: center center;
+}
+
+
+/* =========================================================
+   ОБЫЧНЫЙ HOVER
+========================================================= */
+
+.sticker:not(.flipped):hover .sticker-inner {
+    transform:
+        translateY(-9px)
+        scale(1.04);
+}
+
+
+/* =========================================================
+   ОТКРЫТЫЙ СТИКЕР
+========================================================= */
+
+.sticker.flipped {
+    z-index: 100;
+}
+
+.sticker.flipped .sticker-inner {
+    transform: scale(1.8);
+
+    filter:
+        drop-shadow(
+            0 20px 30px
+            rgba(40,20,10,0.4)
+        );
+}
+
+
+/* =========================================================
+   HOVER ОТКРЫТОГО
+========================================================= */
+
+.sticker.flipped:hover .sticker-inner {
+    transform: scale(1.8);
 }
 
 
@@ -299,9 +333,11 @@ h1 {
     position: absolute;
 
     top: 0;
+
     left: 0;
 
     width: 100%;
+
     height: 100%;
 
     border-radius: 4px;
@@ -317,14 +353,13 @@ h1 {
 ========================================================= */
 
 .sticker-front {
-    z-index: 2;
-
-    padding: 18px;
-
     display: flex;
 
     align-items: center;
+
     justify-content: center;
+
+    padding: 18px;
 
     text-align: center;
 
@@ -345,34 +380,7 @@ h1 {
         4px solid
         rgba(255,255,255,0.5);
 
-    /*
-       Плавно исчезает при открытии.
-    */
-
-    opacity: 1;
-
-    visibility: visible;
-
-    transition:
-        opacity 0.25s ease,
-        visibility 0s linear 0s;
-}
-
-
-/* =========================================================
-   ПЕРЕДНЯЯ СТОРОНА ПРИ ОТКРЫТИИ
-========================================================= */
-
-.sticker.flipped .sticker-front {
-    opacity: 0;
-
-    visibility: hidden;
-
-    pointer-events: none;
-
-    transition:
-        opacity 0.25s ease,
-        visibility 0s linear 0.25s;
+    z-index: 2;
 }
 
 
@@ -407,9 +415,11 @@ h1 {
     position: absolute;
 
     right: 0;
+
     bottom: 0;
 
     width: 25px;
+
     height: 25px;
 
     background:
@@ -422,16 +432,20 @@ h1 {
 
 
 /* =========================================================
+   ПЕРЕДНЯЯ СТОРОНА ПОСЛЕ КЛИКА
+========================================================= */
+
+.sticker.flipped .sticker-front {
+    display: none;
+}
+
+
+/* =========================================================
    ОБОРОТНАЯ СТОРОНА
 ========================================================= */
 
 .sticker-back {
-    /*
-       Задняя сторона всегда существует.
-       Она просто скрыта до клика.
-    */
-
-    z-index: 1;
+    display: none;
 
     padding: 14px;
 
@@ -441,8 +455,6 @@ h1 {
         2px solid
         rgba(80,70,60,0.15);
 
-    display: flex;
-
     flex-direction: column;
 
     align-items: center;
@@ -451,40 +463,16 @@ h1 {
 
     overflow: hidden;
 
-    opacity: 0;
-
-    visibility: hidden;
-
-    pointer-events: none;
-
-    /*
-       Никаких transform.
-       Никакого rotateY.
-       Никакого backface-visibility.
-    */
-
-    transition:
-        opacity 0.25s ease,
-        visibility 0s linear 0.25s;
+    z-index: 3;
 }
 
 
 /* =========================================================
-   ОБОРОТНАЯ СТОРОНА ПРИ ОТКРЫТИИ
+   ОБОРОТ ПОСЛЕ КЛИКА
 ========================================================= */
 
 .sticker.flipped .sticker-back {
-    z-index: 3;
-
-    opacity: 1;
-
-    visibility: visible;
-
-    pointer-events: auto;
-
-    transition:
-        opacity 0.25s ease,
-        visibility 0s linear 0s;
+    display: flex;
 }
 
 
@@ -497,18 +485,12 @@ h1 {
 
     margin: 0 0 8px 0;
 
-    padding: 0;
-
     font-family:
         "Trebuchet MS",
         Arial,
         sans-serif;
 
-    /*
-       ВСЕГДА 15px
-    */
-
-    font-size: 15px !important;
+    font-size: 15px;
 
     line-height: 1.25;
 
@@ -521,14 +503,6 @@ h1 {
     color: #a15f68;
 
     text-align: center;
-
-    /*
-       Защита от исчезновения текста.
-    */
-
-    opacity: 1;
-
-    visibility: visible;
 }
 
 
@@ -546,14 +520,6 @@ h1 {
     align-items: center;
 
     gap: 6px;
-
-    /*
-       Текст не должен исчезать.
-    */
-
-    opacity: 1;
-
-    visibility: visible;
 }
 
 
@@ -573,11 +539,7 @@ h1 {
         Arial,
         sans-serif;
 
-    /*
-       15px
-    */
-
-    font-size: 15px !important;
+    font-size: 15px;
 
     line-height: 1.3;
 
@@ -588,10 +550,6 @@ h1 {
     max-width: 95%;
 
     color: #403737;
-
-    opacity: 1;
-
-    visibility: visible;
 }
 
 
@@ -609,10 +567,6 @@ h1 {
     flex-wrap: wrap;
 
     gap: 5px;
-
-    opacity: 1;
-
-    visibility: visible;
 }
 
 
@@ -632,25 +586,17 @@ h1 {
         Arial,
         sans-serif;
 
-    /*
-       15px
-    */
-
-    font-size: 15px !important;
+    font-size: 15px;
 
     line-height: 1.3;
 
     text-align: center;
 
+    color: #403737;
+
     border:
         1px solid
         rgba(80,80,100,0.12);
-
-    color: #403737;
-
-    opacity: 1;
-
-    visibility: visible;
 }
 
 
@@ -670,55 +616,13 @@ h1 {
         Arial,
         sans-serif;
 
-    /*
-       15px
-    */
-
-    font-size: 15px !important;
+    font-size: 15px;
 
     line-height: 1.4;
 
     color: #655d5d;
 
     text-align: left;
-
-    opacity: 1;
-
-    visibility: visible;
-}
-
-
-/* =========================================================
-   HOVER ЗАКРЫТОГО СТИКЕРА
-========================================================= */
-
-.sticker:not(.flipped):hover {
-    transform:
-        translateY(-9px)
-        scale(1.04);
-}
-
-
-/* =========================================================
-   HOVER ОТКРЫТОГО СТИКЕРА
-========================================================= */
-
-.sticker.flipped:hover {
-    transform:
-        scale(1.8);
-}
-
-
-/* =========================================================
-   ТЕНЬ ОТКРЫТОГО СТИКЕРА
-========================================================= */
-
-.sticker.flipped .sticker-inner {
-    filter:
-        drop-shadow(
-            0 20px 30px
-            rgba(40,20,10,0.4)
-        );
 }
 
 
@@ -730,16 +634,19 @@ h1 {
 
     0% {
         opacity: 0;
+
         transform: scale(0.5);
     }
 
     50% {
         opacity: 1;
+
         transform: scale(1.2);
     }
 
     100% {
         opacity: 0;
+
         transform: scale(1.8);
     }
 }
@@ -768,6 +675,7 @@ h1 {
     position: fixed;
 
     left: 50%;
+
     bottom: 20px;
 
     transform: translateX(-50%);
@@ -823,17 +731,16 @@ h1 {
 
     .sticker {
         width: 145px;
+
         height: 115px;
     }
 
-    .sticker.flipped {
-        transform:
-            scale(1.75);
+    .sticker.flipped .sticker-inner {
+        transform: scale(1.75);
     }
 
-    .sticker.flipped:hover {
-        transform:
-            scale(1.75);
+    .sticker.flipped:hover .sticker-inner {
+        transform: scale(1.75);
     }
 
     .sticker-front {
@@ -841,19 +748,19 @@ h1 {
     }
 
     .back-title {
-        font-size: 15px !important;
+        font-size: 15px;
     }
 
     .mind-root {
-        font-size: 15px !important;
+        font-size: 15px;
     }
 
     .mind-node {
-        font-size: 15px !important;
+        font-size: 15px;
     }
 
     .mind-actions {
-        font-size: 15px !important;
+        font-size: 15px;
     }
 }
 
@@ -878,17 +785,16 @@ h1 {
 
     .sticker {
         width: 135px;
+
         height: 105px;
     }
 
-    .sticker.flipped {
-        transform:
-            scale(1.7);
+    .sticker.flipped .sticker-inner {
+        transform: scale(1.7);
     }
 
-    .sticker.flipped:hover {
-        transform:
-            scale(1.7);
+    .sticker.flipped:hover .sticker-inner {
+        transform: scale(1.7);
     }
 
     .hint {
@@ -900,18 +806,18 @@ h1 {
     }
 
     .back-title {
-        font-size: 15px !important;
+        font-size: 15px;
     }
 
     .mind-root {
-        font-size: 15px !important;
+        font-size: 15px;
     }
 
     .mind-node {
-        font-size: 15px !important;
+        font-size: 15px;
     }
 
     .mind-actions {
-        font-size: 15px !important;
+        font-size: 15px;
     }
 }
