@@ -294,7 +294,7 @@ const stickers = [
 
 
 /* =========================================================
-   СОЗДАНИЕ ОДНОГО СТИКЕРА
+   СОЗДАНИЕ СТИКЕРА
 ========================================================= */
 
 function createSticker(data, index) {
@@ -305,58 +305,46 @@ function createSticker(data, index) {
 
     sticker.dataset.index = index;
 
-
-    /* =====================================================
-       РАЗМЕРЫ
-    ===================================================== */
-
-    const stickerWidth = 170;
-    const stickerHeight = 135;
+    sticker.dataset.flipped = "false";
 
 
     /* =====================================================
-       СЛУЧАЙНАЯ ПОЗИЦИЯ
+       ПОЗИЦИЯ
     ===================================================== */
 
     const boardWidth = board.clientWidth;
     const boardHeight = board.clientHeight;
 
+    const stickerWidth = 170;
+    const stickerHeight = 135;
+
     const x =
         Math.random() *
-        Math.max(
-            20,
-            boardWidth - stickerWidth - 20
-        );
+        Math.max(20, boardWidth - stickerWidth - 20);
 
     const y =
         Math.random() *
-        Math.max(
-            20,
-            boardHeight - stickerHeight - 20
-        );
+        Math.max(20, boardHeight - stickerHeight - 20);
 
     const rotation =
         Math.random() * 14 - 7;
 
-
     sticker.style.left = `${x}px`;
     sticker.style.top = `${y}px`;
-
-    sticker.style.transform =
-        `rotate(${rotation}deg)`;
+    sticker.style.transform = `rotate(${rotation}deg)`;
 
 
     /* =====================================================
        HTML
+
+       ВАЖНО:
+       Обратная сторона НЕ зависит от backface-visibility.
+       Обе стороны существуют как обычные элементы.
     ===================================================== */
 
     sticker.innerHTML = `
 
         <div class="sticker-inner">
-
-            <!-- =========================================
-                 ЛИЦЕВАЯ СТОРОНА
-            ========================================== -->
 
             <div class="sticker-front">
 
@@ -367,43 +355,35 @@ function createSticker(data, index) {
             </div>
 
 
-            <!-- =========================================
-                 ОБОРОТНАЯ СТОРОНА
-            ========================================== -->
-
             <div class="sticker-back">
 
-                <div class="back-content">
+                <div class="back-title">
+                    ${data.title}
+                </div>
 
-                    <div class="back-title">
+
+                <div class="mindmap">
+
+                    <div class="mind-root">
                         ${data.title}
                     </div>
 
 
-                    <div class="mindmap">
+                    <div class="mind-branches">
 
-                        <div class="mind-root">
-                            ${data.title}
-                        </div>
+                        ${data.nodes.map(node => `
 
+                            <div class="mind-node">
+                                ${node}
+                            </div>
 
-                        <div class="mind-branches">
+                        `).join("")}
 
-                            ${data.nodes.map(
-                                node => `
-                                    <div class="mind-node">
-                                        ${node}
-                                    </div>
-                                `
-                            ).join("")}
-
-                        </div>
+                    </div>
 
 
-                        <div class="mind-actions">
-                            ${data.actions}
-                        </div>
-
+                    <div class="mind-actions">
+                        ${data.actions}
                     </div>
 
                 </div>
@@ -411,11 +391,12 @@ function createSticker(data, index) {
             </div>
 
         </div>
+
     `;
 
 
     /* =====================================================
-       ЭЛЕМЕНТЫ
+       ПОЛУЧАЕМ ОБЕ СТОРОНЫ
     ===================================================== */
 
     const inner =
@@ -430,175 +411,127 @@ function createSticker(data, index) {
 
     /* =====================================================
        НАЧАЛЬНОЕ СОСТОЯНИЕ
+
+       Обратная сторона существует,
+       но скрыта.
     ===================================================== */
 
-    front.style.visibility = "visible";
-    front.style.opacity = "1";
-
-    back.style.visibility = "hidden";
-    back.style.opacity = "0";
+    back.style.display = "none";
+    front.style.display = "flex";
 
 
     /* =====================================================
-       НАЧАЛЬНЫЙ TRANSFORM
+       КЛИК
     ===================================================== */
 
-    inner.style.transform =
-        "rotateY(0deg) scale(1)";
+    sticker.addEventListener("click", function(event) {
+
+        event.stopPropagation();
 
 
-    /* =====================================================
-       КЛИК ПО СТИКЕРУ
-    ===================================================== */
-
-    sticker.addEventListener(
-        "click",
-        function(event) {
-
-            event.stopPropagation();
+        const isFlipped =
+            sticker.dataset.flipped === "true";
 
 
-            const isFlipped =
-                sticker.classList.contains("flipped");
+        if (!isFlipped) {
 
-
-            /* =================================================
+            /* =============================================
                ОТКРЫВАЕМ
-            ================================================= */
+            ============================================= */
 
-            if (!isFlipped) {
+            sticker.dataset.flipped = "true";
 
-                sticker.classList.add("flipped");
+            sticker.classList.add("flipped");
 
-                flippedCount++;
+            flippedCount++;
 
-                counter.textContent =
-                    flippedCount;
-
-
-                /*
-                 * Поднимаем стикер поверх остальных.
-                 */
-
-                sticker.style.zIndex = "100";
+            counter.textContent = flippedCount;
 
 
-                /*
-                 * Запускаем вращение.
-                 */
+            /* Сначала увеличиваем */
 
-                inner.style.transform =
-                    "rotateY(180deg) scale(1.8)";
+            inner.style.transform =
+                "scale(1.8)";
 
 
-                /*
-                 * В середине вращения:
-                 *
-                 * лицевая сторона исчезает,
-                 * оборотная становится видимой.
-                 */
+            /* Затем переключаем сторону */
 
-                setTimeout(
-                    function() {
+            setTimeout(() => {
 
-                        front.style.visibility =
-                            "hidden";
+                front.style.display = "none";
 
-                        front.style.opacity =
-                            "0";
+                back.style.display = "flex";
 
+            }, 250);
 
-                        back.style.visibility =
-                            "visible";
+        } else {
 
-                        back.style.opacity =
-                            "1";
-
-                    },
-                    350
-                );
-
-            }
-
-
-            /* =================================================
+            /* =============================================
                ЗАКРЫВАЕМ
-            ================================================= */
+            ============================================= */
 
-            else {
+            sticker.dataset.flipped = "false";
 
-                /*
-                 * Сначала показываем лицевую
-                 * и убираем оборотную.
-                 */
+            sticker.classList.remove("flipped");
 
-                back.style.visibility =
-                    "hidden";
+            flippedCount--;
 
-                back.style.opacity =
-                    "0";
+            counter.textContent = flippedCount;
 
 
-                front.style.visibility =
-                    "visible";
+            /* Сначала скрываем обратную сторону */
 
-                front.style.opacity =
-                    "1";
+            back.style.display = "none";
 
-
-                /*
-                 * Запускаем обратное вращение.
-                 */
-
-                inner.style.transform =
-                    "rotateY(0deg) scale(1)";
+            front.style.display = "flex";
 
 
-                sticker.classList.remove(
-                    "flipped"
-                );
+            /* Возвращаем размер */
 
-
-                flippedCount--;
-
-                counter.textContent =
-                    flippedCount;
-
-
-                /*
-                 * Возвращаем обычный z-index.
-                 */
-
-                setTimeout(
-                    function() {
-
-                        if (
-                            !sticker.classList.contains(
-                                "flipped"
-                            )
-                        ) {
-
-                            sticker.style.zIndex = "2";
-
-                        }
-
-                    },
-                    700
-                );
-            }
-
-
-            /* =================================================
-               ЭФФЕКТ ✦
-            ================================================= */
-
-            createSparkle(
-                event.clientX,
-                event.clientY
-            );
+            inner.style.transform =
+                "scale(1)";
 
         }
-    );
+
+
+        createSparkle(
+            event.clientX,
+            event.clientY
+        );
+
+    });
+
+
+    /* =====================================================
+       HOVER
+    ===================================================== */
+
+    sticker.addEventListener("mouseenter", function() {
+
+        if (
+            sticker.dataset.flipped !== "true"
+        ) {
+
+            inner.style.transform =
+                "translateY(-9px) scale(1.04)";
+
+        }
+
+    });
+
+
+    sticker.addEventListener("mouseleave", function() {
+
+        if (
+            sticker.dataset.flipped !== "true"
+        ) {
+
+            inner.style.transform =
+                "scale(1)";
+
+        }
+
+    });
 
 
     return sticker;
@@ -614,16 +547,12 @@ function createSparkle(x, y) {
     const sparkle =
         document.createElement("div");
 
-
-    sparkle.className =
-        "sparkle";
-
+    sparkle.className = "sparkle";
 
     sparkle.textContent =
         Math.random() > 0.5
             ? "✦"
             : "✧";
-
 
     sparkle.style.left =
         `${x}px`;
@@ -631,20 +560,16 @@ function createSparkle(x, y) {
     sparkle.style.top =
         `${y}px`;
 
-
     document.body.appendChild(
         sparkle
     );
 
+    setTimeout(() => {
 
-    setTimeout(
-        function() {
+        sparkle.remove();
 
-            sparkle.remove();
+    }, 700);
 
-        },
-        700
-    );
 }
 
 
@@ -654,20 +579,7 @@ function createSparkle(x, y) {
 
 function renderStickers() {
 
-    /*
-     * На всякий случай очищаем доску
-     * от старых стикеров.
-     */
-
-    const oldStickers =
-        board.querySelectorAll(
-            ".sticker"
-        );
-
-    oldStickers.forEach(
-        sticker => sticker.remove()
-    );
-
+    board.innerHTML = "";
 
     flippedCount = 0;
 
@@ -675,7 +587,7 @@ function renderStickers() {
 
 
     stickers.forEach(
-        function(data, index) {
+        (data, index) => {
 
             const sticker =
                 createSticker(
@@ -683,13 +595,13 @@ function renderStickers() {
                     index
                 );
 
-
             board.appendChild(
                 sticker
             );
 
         }
     );
+
 }
 
 
